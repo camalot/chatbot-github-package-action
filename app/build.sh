@@ -5,7 +5,7 @@ base_dir=$(dirname "$0");
 source "${base_dir}/shared.sh";
 
 get_opts() {
-  while getopts ":p:v:f:" opt; do
+  while getopts ":r:v:f:" opt; do
     case $opt in
       r) export opt_repo_name="$OPTARG";
       ;;
