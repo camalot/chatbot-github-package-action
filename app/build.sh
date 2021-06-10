@@ -30,7 +30,6 @@ WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
 GH_TOKEN="${GITHUB_TOKEN:-"${opt_github_token}"}";
 __info "working in ${WORKSPACE}";
 
-[[ -p "${REPO_NAME// }" ]] && __error "'-r' (repo name) attribute is required.";
 [[ -p "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
 [[ -p "${FOLDER_NAME// }" ]] && __error "'-f' (folder name) attribute is required.";
 

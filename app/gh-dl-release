@@ -10,7 +10,7 @@ base_dir=$(dirname "$0");
 source "${base_dir}/shared.sh";
 
 get_opts() {
-	while getopts ":o:r:t:n:g:" opt; do
+	while getopts ":o:r:t:n:f:g:" opt; do
 	  case $opt in
 			o) export opt_repo_owner="$OPTARG";
 			;;
@@ -19,6 +19,8 @@ get_opts() {
 			t) export opt_tag="$OPTARG";
 			;;
       n) export opt_asset_name="$OPTARG";
+			;;
+      f) export opt_out_file_name="$OPTARG";
 			;;
       g) export opt_github_token="$OPTARG";
       ;;
@@ -34,11 +36,11 @@ get_opts "$@";
 [[ -p "${opt_repo_owner// }" ]] && __error "'-o' (repo owner) attribute is required.";
 [[ -p "${opt_repo_name// }" ]] && __error "'-o' (repo owner) attribute is required.";
 
-REPO="${opt_repo_owner}/${opt_repo_name}"           # org/repo
-VERSION="${opt_tag:-"latest"}"                      # tag name or the word "latest"
+REPO="${opt_repo_owner}/${opt_repo_name}";          # org/repo
+VERSION="${opt_tag:-"latest"}";                     # tag name or the word "latest"
 ASSET_NAME="${opt_asset_name}";                     #
-FILE="$4"           # the name of your release asset file, e.g. build.tar.gz
-TOKEN="$5"          # 
+FILE="${opt_out_file_name}";                        # the name of your release asset file, e.g. build.tar.gz
+TOKEN="${opt_github_token}";                        # 
 GITHUB_API_ENDPOINT="api.github.com"
 
 alias errcho='>&2 echo'
