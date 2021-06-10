@@ -27,15 +27,22 @@ BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
 FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDER}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
 
+__info "working in ${WORKSPACE}";
+
 [[ -p "${REPO_NAME// }" ]] && __error "'-r' (repo name) attribute is required.";
 [[ -p "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
 [[ -p "${FOLDER_NAME// }" ]] && __error "'-f' (folder name) attribute is required.";
 
+__info "Make temp directory";
 mkdir -p "${WORKSPACE}/temp/";
+__info "Make dist directory";
 mkdir -p "${WORKSPACE}/dist/";
+
+__info "Copy folder ${WORKSPACE}/script -> ${WORKSPACE}/temp/"
 cp -r "${WORKSPACE}/script" "${WORKSPACE}/temp/";
 
 for p in ${WORKSPACE}/temp/script/*.py; do
+  __info "sed Version to ${BUILD_VERSION} in ${p}";
   sed -i "s/Version = \"1.0.0-snapshot\"/Version = \"${BUILD_VERSION}\"/g" "${p}";
 done
 
@@ -45,20 +52,26 @@ updater_zip="${WORKSPACE}/temp/script/applicationupdater.zip";
 # 	| jq -r '.assets[] | select(.name|test("ApplicationUpdater.Administrator")) | .browser_download_url') > ${WORKSPACE}/temp/script/applicationupdater.zip;
 
 sleep 2;
+__info "make updater directory";
 mkdir -p ${WORKSPACE}/temp/script/libs/updater/
+__info "unzip updater zip file";
 unzip -d ${WORKSPACE}/temp/script/libs/updater/ $updater_zip;
 sleep 2;
-rm "${WORKSPACE}/temp/script/applicationupdater.zip";
+__info "remove updater zip file"
+rm "${updater_zip}";
 
 mv "${WORKSPACE}/temp/script" "${WORKSPACE}/temp/${FOLDER_NAME}";
-pushd . || exit 9;
-cd "${WORKSPACE}/temp/" || exit 9;
+pushd . || __error "unable to pushd to '.'" && exit 9;
+cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/" && exit 9;
 pwd;
 
-[[ ! -f ${WORKSPACE}/.zipignore ]] && touch ${WORKSPACE}/.zipignore;
+
+[[ ! -f ${WORKSPACE}/.zipignore ]] && __warning "create ${WORKSPACE}/.zipignore file" && touch ${WORKSPACE}/.zipignore;
 
 zip -r "${REPO_NAME}-${BUILD_VERSION}.zip" --exclude=@${WORKSPACE}/.zipignore -- *;
 mv "${REPO_NAME}-${BUILD_VERSION}.zip" "${WORKSPACE}/dist/";
-popd || exit 9;
+popd || __error "unable to popd" && exit 9;
 
-echo "::set-output name=releaseZip::${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip";
+__info "Setting ouptut releaseZip: ${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip";
+# echo "::set-output name=releaseZip::${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip";
+__set_output "releaseZip" "${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip"
