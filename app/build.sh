@@ -33,8 +33,11 @@ __info "working in ${WORKSPACE}";
 [[ -p "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
 [[ -p "${FOLDER_NAME// }" ]] && __error "'-f' (folder name) attribute is required.";
 
+
+[ -d ${WORKSPACE}/temp/ ] && __info "delete ${WORKSPACE}/temp/" && rm -rf ${WORKSPACE}/temp/;
 __info "Make temp directory";
 mkdir -p "${WORKSPACE}/temp/";
+[ -d ${WORKSPACE}/dist/ ] && __info "delete ${WORKSPACE}/dist/" && rm -rf ${WORKSPACE}/dist/;
 __info "Make dist directory";
 mkdir -p "${WORKSPACE}/dist/";
 
