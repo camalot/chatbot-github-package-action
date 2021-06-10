@@ -14,7 +14,7 @@ RUN apk add jq curl zip unzip sed bash
 
 RUN mkdir -p /app
 
-COPY app/* /app
+COPY app/* /app/
 
 RUN chmod +x /app/entrypoint.sh; \
   chmod +x /app/gh-dl-release; \
