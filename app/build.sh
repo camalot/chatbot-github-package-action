@@ -5,11 +5,13 @@ base_dir=$(dirname "$0");
 source "${base_dir}/shared.sh";
 
 get_opts() {
-  while getopts ":v:f:" opt; do
+  while getopts ":v:f:g:" opt; do
     case $opt in
       v) export opt_version="$OPTARG";
       ;;
       f) export opt_folder_name="$OPTARG";
+      ;;
+      g) export opt_github_token="$OPTARG";
       ;;
       \?) __error "Invalid option -$OPTARG";
       ;;
@@ -25,7 +27,7 @@ REPO_OWNER="${GITHUB_REPOSITORY_OWNER}";
 BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
 FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDER}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
-
+GH_TOKEN="${GITHUB_TOKEN:-"${opt_github_token}"}";
 __info "working in ${WORKSPACE}";
 
 [[ -p "${REPO_NAME// }" ]] && __error "'-r' (repo name) attribute is required.";
@@ -46,7 +48,7 @@ for p in ${WORKSPACE}/temp/script/*.py; do
 done
 
 updater_zip="${WORKSPACE}/temp/script/applicationupdater.zip";
-/app/gh-dl-release -o "camalot" -r "chatbotscriptupdater" -t "latest" -n "ApplicationUpdater.Administrator" -f "$updater_zip" -g ${GITHUB_TOKEN};
+/app/gh-dl-release -o "camalot" -r "chatbotscriptupdater" -t "latest" -n "ApplicationUpdater.Administrator" -f "$updater_zip" -g ${GH_TOKEN};
 # curl -sSL $(curl -s "https://api.github.com/repos/camalot/chatbotscriptupdater/releases/latest" \
 # 	| jq -r '.assets[] | select(.name|test("ApplicationUpdater.Administrator")) | .browser_download_url') > ${WORKSPACE}/temp/script/applicationupdater.zip;
 

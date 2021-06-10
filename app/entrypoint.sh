@@ -7,4 +7,4 @@ INPUT_GITHUB_TOKEN="$INPUT_TOKEN";
 
 [ -z GITHUB_TOKEN ] && GITHUB_TOKEN="${INPUT_GITHUB_TOKEN}";
 
-/app/build.sh -v "${BUILD_VERSION}" -f "${FOLDER_NAME}" -g ${GITHUB_TOKEN};
+/app/build.sh -v "${BUILD_VERSION}" -f "${FOLDER_NAME}";
