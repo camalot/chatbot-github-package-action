@@ -22,8 +22,9 @@ get_opts() {
 
 get_opts "$@";
 
-REPO_NAME="${GITHUB_REPOSITORY}";
 REPO_OWNER="${GITHUB_REPOSITORY_OWNER}";
+REPO_FULLNAME="${GITHUB_REPOSITORY}";
+REPO_NAME=$(echo $REPO_FULLNAME | sed "s/$REPO_OWNER\///");
 BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
 FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDER}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
