@@ -60,11 +60,11 @@ sleep 2;
 __info "remove updater zip file"
 rm "${updater_zip}";
 
+__info "Move ${WORKSPACE}/temp/script -> ${WORKSPACE}/temp/${FOLDER_NAME}";
 mv "${WORKSPACE}/temp/script" "${WORKSPACE}/temp/${FOLDER_NAME}";
 pushd . || __error "unable to pushd to '.'" && exit 9;
-cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/" && exit 9;
-
 __info "change to temp directory";
+cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/" && exit 9;
 
 ls -lFA;
 pwd;
