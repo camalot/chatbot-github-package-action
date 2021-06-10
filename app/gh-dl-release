@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # Based on original work at https://github.com/Legion2/download-release-action/blob/master/gh-dl-release
 #
 # USAGE
@@ -6,14 +6,37 @@
 
 set -e
 
-if [ $# -lt 3 ] ;then
-    echo "Usage: <org/repo> <version or 'latest'> <filename> [<github token>]"
-    exit 1
-fi
+base_dir=$(dirname "$0");
+source "${base_dir}/shared.sh";
 
-REPO="$1"           # org/repo
-VERSION="$2"        # tag name or the word "latest"
-ASSET_NAME="$3";    #
+get_opts() {
+	while getopts ":n:v:f:" opt; do
+	  case $opt in
+			o) export opt_repo_owner="$OPTARG";
+			;;
+			r) export opt_repo_name="$OPTARG";
+			;;
+			t) export opt_tag="$OPTARG";
+			;;
+      n) export opt_asset_name="$OPTARG";
+			;;
+      g) export opt_github_token="$OPTARG";
+      ;;
+	    \?) __error "Invalid option -$OPTARG";
+	    ;;
+	  esac;
+	done;
+	return 0;
+};
+
+get_opts "$@";
+
+[[ -p "${opt_repo_owner// }" ]] && __error "'-o' (repo owner) attribute is required.";
+[[ -p "${opt_repo_name// }" ]] && __error "'-o' (repo owner) attribute is required.";
+
+REPO="${opt_repo_owner}/${opt_repo_name}"           # org/repo
+VERSION="${opt_tag:-"latest"}"                      # tag name or the word "latest"
+ASSET_NAME="${opt_asset_name}";                     #
 FILE="$4"           # the name of your release asset file, e.g. build.tar.gz
 TOKEN="$5"          # 
 GITHUB_API_ENDPOINT="api.github.com"
@@ -50,8 +73,14 @@ PARSER=".assets | map(select(.name|test(\"$ASSET_NAME\")))[0].id";
 
 ASSET_ID=$(gh_curl $RELEASE_URL | jq "$PARSER");
 if [ "$ASSET_ID" = "null" ]; then
-  errcho "ERROR: file not found '$FILE'";
+  errcho "ERROR: asset not found '$ASSET_NAME'";
   exit 1;
 fi
 
+# make base directory for file
+file_base_dir=$(basename $FILE);
+mkdir -p $file_base_dir;
+
 gh_get_asset $ASSET_ID > "$FILE";
+echo "::set-output name=downloadedAsset::${PWD}/$FILE";
+echo "::debug::Output Set to: ${PWD}/$FILE";

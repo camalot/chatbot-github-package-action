@@ -13,8 +13,6 @@ get_opts() {
       ;;
       f) export opt_folder_name="$OPTARG";
       ;;
-      g) export opt_github_token="$OPTARG";
-      ;;
       \?) __error "Invalid option -$OPTARG";
       ;;
     esac;
@@ -28,7 +26,6 @@ REPO_NAME="${opt_repo_name:-"${INPUT_REPONAME}"}";
 BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
 FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDERNAME}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
-GITHUB_TOKEN=${opt_github_token};
 
 [[ -p "${REPO_NAME// }" ]] && __error "'-r' (repo name) attribute is required.";
 [[ -p "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
