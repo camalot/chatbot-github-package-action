@@ -5,10 +5,8 @@ base_dir=$(dirname "$0");
 source "${base_dir}/shared.sh";
 
 get_opts() {
-  while getopts ":r:v:f:" opt; do
+  while getopts ":v:f:" opt; do
     case $opt in
-      r) export opt_repo_name="$OPTARG";
-      ;;
       v) export opt_version="$OPTARG";
       ;;
       f) export opt_folder_name="$OPTARG";
@@ -22,7 +20,8 @@ get_opts() {
 
 get_opts "$@";
 
-REPO_NAME="${opt_repo_name:-"${INPUT_REPONAME}"}";
+REPO_NAME="${GITHUB_REPOSITORY}";
+REPO_OWNER="${GITHUB_REPOSITORY_OWNER}";
 BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
 FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDER}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";

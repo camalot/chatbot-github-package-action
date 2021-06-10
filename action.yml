@@ -5,9 +5,6 @@ outputs:
   releaseZip:
     description: The full path of the release zip package
 inputs: 
-  repoName: 
-    description: This is just the name of the repo, no owner.
-    required: true
   version:
     description: 'The semver of the build'
     required: true
