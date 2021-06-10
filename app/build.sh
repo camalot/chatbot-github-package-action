@@ -65,9 +65,9 @@ rm "${updater_zip}";
 
 __info "Move ${WORKSPACE}/temp/script -> ${WORKSPACE}/temp/${FOLDER_NAME}";
 mv "${WORKSPACE}/temp/script" "${WORKSPACE}/temp/${FOLDER_NAME}";
-pushd . || __error "unable to pushd to '.'" && exit 9;
+
 __info "change to temp directory";
-cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/" && exit 9;
+cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/";
 
 ls -lFA;
 pwd;
@@ -78,7 +78,7 @@ zip -r "${REPO_NAME}-${BUILD_VERSION}.zip" --exclude=@${WORKSPACE}/.zipignore --
 __info "move ${REPO_NAME}-${BUILD_VERSION}.zip -> ${WORKSPACE}/dist/";
 mv "${REPO_NAME}-${BUILD_VERSION}.zip" "${WORKSPACE}/dist/";
 
-popd || __error "unable to popd" && exit 9;
+cd ${WORKSPACE} || __error "unable to cd to ${WORKSPACE}/temp/";
 
 __info "Setting ouptut releaseZip: ${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip";
 # echo "::set-output name=releaseZip::${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip";
