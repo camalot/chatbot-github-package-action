@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
 __error() {
-	echo "::error::${@:2}"
+	echo "::error::${@:1}"
 	exit 9;
 }
 __warning() {
-	echo "::warning::${@:2}"
+	echo "::warning::${@:1}"
+}
+__debug() {
+	echo "::debug::${@:1}"
 }
 __info() {
-	echo "::debug::${@:2}"
+	echo "${@:1}"
 }
 
 __set_output() {
