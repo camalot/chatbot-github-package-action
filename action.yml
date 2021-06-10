@@ -1,0 +1,25 @@
+name: 'Chatbot Release Package'
+description: 'A custom action for packaging up my chatbot scripts for releases'
+author: 'Ryan Conrad'
+outputs:
+  releaseZip:
+    description: The full path of the release zip package
+inputs: 
+  repoName: 
+    description: This is just the name of the repo, no owner.
+    required: true
+  version:
+    description: 'The semver of the build'
+    required: true
+  folder:
+    description: The name of the folder to put everything in before zipping
+    required: true
+  token:
+    description: 'Github token to access private repositories'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: settings
+  color: 'red'
