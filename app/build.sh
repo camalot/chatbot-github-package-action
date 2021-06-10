@@ -28,24 +28,24 @@ BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
 FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDER}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
 GH_TOKEN="${GITHUB_TOKEN:-"${opt_github_token}"}";
-__info "working in ${WORKSPACE}";
+__debug "working in ${WORKSPACE}";
 
 [[ -p "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
 [[ -p "${FOLDER_NAME// }" ]] && __error "'-f' (folder name) attribute is required.";
 
 
 [ -d ${WORKSPACE}/temp/ ] && __info "delete ${WORKSPACE}/temp/" && rm -rf ${WORKSPACE}/temp/;
-__info "Make temp directory";
+__debug "Make temp directory";
 mkdir -p "${WORKSPACE}/temp/";
 [ -d ${WORKSPACE}/dist/ ] && __info "delete ${WORKSPACE}/dist/" && rm -rf ${WORKSPACE}/dist/;
-__info "Make dist directory";
+__debug "Make dist directory";
 mkdir -p "${WORKSPACE}/dist/";
 
-__info "Copy folder ${WORKSPACE}/script -> ${WORKSPACE}/temp/"
+__debug "Copy folder ${WORKSPACE}/script -> ${WORKSPACE}/temp/"
 cp -r "${WORKSPACE}/script" "${WORKSPACE}/temp/";
 
 for p in ${WORKSPACE}/temp/script/*.py; do
-  __info "sed Version to ${BUILD_VERSION} in ${p}";
+  __debug "sed Version to ${BUILD_VERSION} in ${p}";
   sed -i "s/Version = \"1.0.0-snapshot\"/Version = \"${BUILD_VERSION}\"/g" "${p}";
 done
 
@@ -55,27 +55,24 @@ updater_zip="${WORKSPACE}/temp/script/applicationupdater.zip";
 # 	| jq -r '.assets[] | select(.name|test("ApplicationUpdater.Administrator")) | .browser_download_url') > ${WORKSPACE}/temp/script/applicationupdater.zip;
 
 sleep 2;
-__info "make updater directory";
+__debug "make updater directory";
 mkdir -p ${WORKSPACE}/temp/script/libs/updater/
-__info "unzip updater zip file";
+__debug "unzip updater zip file";
 unzip -d ${WORKSPACE}/temp/script/libs/updater/ $updater_zip;
 sleep 2;
-__info "remove updater zip file"
+__debug "remove updater zip file"
 rm "${updater_zip}";
 
-__info "Move ${WORKSPACE}/temp/script -> ${WORKSPACE}/temp/${FOLDER_NAME}";
+__debug "Move ${WORKSPACE}/temp/script -> ${WORKSPACE}/temp/${FOLDER_NAME}";
 mv "${WORKSPACE}/temp/script" "${WORKSPACE}/temp/${FOLDER_NAME}";
 
-__info "change to temp directory";
+__debug "change to temp directory";
 cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/";
 
-ls -lFA;
-pwd;
-
 [[ ! -f ${WORKSPACE}/.zipignore ]] && __warning "create ${WORKSPACE}/.zipignore file" && touch ${WORKSPACE}/.zipignore;
-__info "Zip up working directory";
+__debug "Zip up working directory";
 zip -r "${REPO_NAME}-${BUILD_VERSION}.zip" --exclude=@${WORKSPACE}/.zipignore -- *;
-__info "move ${REPO_NAME}-${BUILD_VERSION}.zip -> ${WORKSPACE}/dist/";
+__debug "move ${REPO_NAME}-${BUILD_VERSION}.zip -> ${WORKSPACE}/dist/";
 mv "${REPO_NAME}-${BUILD_VERSION}.zip" "${WORKSPACE}/dist/";
 
 cd ${WORKSPACE} || __error "unable to cd to ${WORKSPACE}/temp/";

@@ -76,13 +76,11 @@ PARSER=".assets | map(select(.name|test(\"$ASSET_NAME\")))[0].id";
 ASSET_ID=$(gh_curl $RELEASE_URL | jq "$PARSER");
 if [ "$ASSET_ID" = "null" ]; then
   __error "ERROR: asset not found '$ASSET_NAME'";
-  exit 1;
 fi
 
 # make base directory for file
 file_base_dir=$(basename $FILE);
-__info "create file base directory: ${file_base_dir}";
+__debug "create file base directory: ${file_base_dir}";
 mkdir -p $file_base_dir;
 
 gh_get_asset $ASSET_ID > "$FILE";
-__info "Output Set to: ${PWD}/$FILE";
