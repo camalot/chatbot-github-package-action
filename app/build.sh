@@ -63,13 +63,18 @@ rm "${updater_zip}";
 mv "${WORKSPACE}/temp/script" "${WORKSPACE}/temp/${FOLDER_NAME}";
 pushd . || __error "unable to pushd to '.'" && exit 9;
 cd "${WORKSPACE}/temp/" || __error "unable to cd to ${WORKSPACE}/temp/" && exit 9;
+
+__info "change to temp directory";
+
+ls -lFA;
 pwd;
 
-
 [[ ! -f ${WORKSPACE}/.zipignore ]] && __warning "create ${WORKSPACE}/.zipignore file" && touch ${WORKSPACE}/.zipignore;
-
+__info "Zip up working directory";
 zip -r "${REPO_NAME}-${BUILD_VERSION}.zip" --exclude=@${WORKSPACE}/.zipignore -- *;
+__info "move ${REPO_NAME}-${BUILD_VERSION}.zip -> ${WORKSPACE}/dist/";
 mv "${REPO_NAME}-${BUILD_VERSION}.zip" "${WORKSPACE}/dist/";
+
 popd || __error "unable to popd" && exit 9;
 
 __info "Setting ouptut releaseZip: ${WORKSPACE}/dist/${REPO_NAME}-${BUILD_VERSION}.zip";
