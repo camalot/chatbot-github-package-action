@@ -24,7 +24,7 @@ get_opts "$@";
 
 REPO_NAME="${opt_repo_name:-"${INPUT_REPONAME}"}";
 BUILD_VERSION="${opt_version:-"${INPUT_VERSION}"}";
-FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDERNAME}"}";
+FOLDER_NAME="${opt_folder_name:-"${INPUT_FOLDER}"}";
 WORKSPACE="${GITHUB_WORKSPACE:-"${PWD}"}";
 
 [[ -p "${REPO_NAME// }" ]] && __error "'-r' (repo name) attribute is required.";
