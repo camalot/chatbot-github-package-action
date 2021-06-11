@@ -43,8 +43,6 @@ FILE="${opt_out_file_name}";                        # the name of your release a
 TOKEN="${opt_github_token}";                        # 
 GITHUB_API_ENDPOINT="api.github.com"
 
-alias errcho='>&2 echo'
-
 gh_curl() {
   if [ -z "$TOKEN" ]; then
     curl -sL \
